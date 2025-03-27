@@ -15,3 +15,7 @@ functions:
 
 resources:
   - ${file(./infrastructure/sqs/queues.yml)}
+  - ${file(./infrastructure/alarms/_sqs-dlq-alarms.yml):Alarms}
+  - ${file(./infrastructure/alarms/_sqs-queue-alarms.yml):Alarms}
+  - ${file(./infrastructure/alarms/_api-gateway-alarms.yml):Alarms}
+  - ${file(./infrastructure/alarms/_lambda-alarms.yml):Alarms}
