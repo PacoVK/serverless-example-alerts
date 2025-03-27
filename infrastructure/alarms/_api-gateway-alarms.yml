@@ -1,0 +1,66 @@
+CommonAlarmProperties: &CommonAlarmProperties
+  ComparisonOperator: "GreaterThanThreshold"
+  TreatMissingData: "notBreaching"
+  Namespace: "AWS/ApiGateway"
+
+Alarms:
+  Resources:
+    ApiGateway5xxErrorAlarm:
+      Type: AWS::CloudWatch::Alarm
+      Properties:
+        << : *CommonAlarmProperties
+        AlarmName: "API Gateway 5xx Error Rate Alarm"
+        AlarmDescription: "Alarm when 5xx error rate exceeds 1% of total requests"
+        MetricName: "5XXError"
+        Dimensions:
+          - Name: "ApiName"
+            Value: ${self:service}
+        Statistic: "Average"
+        Period: 300
+        EvaluationPeriods: 1
+        Threshold: 1
+
+    ApiGatewayLatencyAlarm:
+      Type: AWS::CloudWatch::Alarm
+      Properties:
+        << : *CommonAlarmProperties
+        AlarmName: "API Gateway Latency Alarm"
+        AlarmDescription: "Alarm when p95 latency exceeds 400ms"
+        MetricName: "Latency"
+        Dimensions:
+          - Name: "ApiName"
+            Value: ${self:service}
+        ExtendedStatistic: "p95"
+        Period: 300
+        EvaluationPeriods: 1
+        Threshold: 400
+
+    ApiGatewayIntegrationLatencyAlarm:
+      Type: AWS::CloudWatch::Alarm
+      Properties:
+        << : *CommonAlarmProperties
+        AlarmName: "API Gateway Integration Latency Alarm"
+        AlarmDescription: "Alarm when p95 integration latency exceeds 400ms"
+        MetricName: "IntegrationLatency"
+        Dimensions:
+          - Name: "ApiName"
+            Value: ${self:service}
+        ExtendedStatistic: "p95"
+        Period: 300
+        EvaluationPeriods: 1
+        Threshold: 400
+
+    ApiGateway4xxErrorAlarm:
+      Type: AWS::CloudWatch::Alarm
+      Properties:
+        << : *CommonAlarmProperties
+        AlarmName: "API Gateway 4xx Error Rate Alarm"
+        AlarmDescription: "Alarm when 4xx error rate exceeds 5% of total requests for 5 minutes"
+        MetricName: "4XXError"
+        Dimensions:
+          - Name: "ApiName"
+            Value: ${self:service}
+        Statistic: "Average"
+        Period: 300
+        EvaluationPeriods: 1
+        Threshold: 5

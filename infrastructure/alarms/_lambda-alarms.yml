@@ -1,0 +1,42 @@
+LambdaErrorAlarmProps: &LambdaErrorAlarmProps
+  Namespace: "AWS/Lambda"
+  MetricName: "Errors"
+  Statistic: "Sum"
+  Period: 300
+  EvaluationPeriods: 1
+  Threshold: 1
+  ComparisonOperator: "GreaterThanThreshold"
+  TreatMissingData: "notBreaching"
+  AlarmDescription: "Alarm when Lambda error rate exceeds 1%"
+
+LambdaThrottleAlarmProps: &LambdaThrottleAlarmProps
+  Namespace: "AWS/Lambda"
+  MetricName: "Throttles"
+  Statistic: "Sum"
+  Period: 300
+  EvaluationPeriods: 1
+  Threshold: 0
+  ComparisonOperator: "GreaterThanThreshold"
+  TreatMissingData: "notBreaching"
+  AlarmDescription: "Alarm when Lambda function is being throttled"
+
+Alarms:
+  Resources:
+    # Hello Lambda alarms
+    HelloErrorAlarm:
+      Type: AWS::CloudWatch::Alarm
+      Properties:
+        << : *LambdaErrorAlarmProps
+        AlarmName: "Hello Error Alarm"
+        Dimensions:
+          - Name: "FunctionName"
+            Value: ${self:service}-${sls:stage}-hello
+
+    HelloThrottlesAlarm:
+      Type: AWS::CloudWatch::Alarm
+      Properties:
+        << : *LambdaThrottleAlarmProps
+        AlarmName: "Hello Throttles Alarm"
+        Dimensions:
+          - Name: "FunctionName"
+            Value: ${self:service}-${sls:stage}-hello

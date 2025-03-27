@@ -1,0 +1,21 @@
+SQSQueueAgeAlarmProps: &SQSQueueAgeAlarmProps
+  Namespace: "AWS/SQS"
+  MetricName: "ApproximateAgeOfOldestMessage"
+  Statistic: "Maximum"
+  Period: 300
+  EvaluationPeriods: 1
+  Threshold: 900  # 15 minutes in seconds, check if this is big enough
+  ComparisonOperator: "GreaterThanThreshold"
+  TreatMissingData: "notBreaching"
+  AlarmDescription: "Alarm when the age of the oldest message exceeds 15 minutes"
+
+Alarms:
+  Resources:
+    ExampleQueueAgeAlarm:
+      Type: AWS::CloudWatch::Alarm
+      Properties:
+        << : *SQSQueueAgeAlarmProps
+        AlarmName: "ExampleQueue Age Alarm"
+        Dimensions:
+          - Name: "QueueName"
+            Value: !GetAtt ExampleQueue.QueueName

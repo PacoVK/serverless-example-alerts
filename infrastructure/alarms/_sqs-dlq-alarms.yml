@@ -1,0 +1,21 @@
+SQSDLQAlarmProps: &SQSDLQAlarmProps
+  Namespace: "AWS/SQS"
+  MetricName: "ApproximateNumberOfMessagesVisible"
+  Statistic: "Sum"
+  Period: 120
+  EvaluationPeriods: 1
+  Threshold: 0
+  ComparisonOperator: "GreaterThanThreshold"
+  TreatMissingData: "ignore"
+  AlarmDescription: "Alarm when we have 1 or more failed messages in 10 minutes"
+
+Alarms:
+  Resources:
+    ExampleDLQAlarm:
+      Type: AWS::CloudWatch::Alarm
+      Properties:
+        << : *SQSDLQAlarmProps
+        AlarmName: "ExampleDLQ Alarm"
+        Dimensions:
+          - Name: "QueueName"
+            Value: !GetAtt ExampleDLQ.QueueName
