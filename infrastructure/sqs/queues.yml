@@ -1,0 +1,13 @@
+Resources:
+  ExampleQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: ExampleQueue
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt ExampleDLQ.Arn
+        maxReceiveCount: 5
+
+  ExampleDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: ExampleDlq
